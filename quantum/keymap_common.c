@@ -127,6 +127,9 @@ action_t action_for_key(uint8_t layer, keypos_t key) {
             mod         = mod_config(keycode & 0xFF);
             action.code = ACTION_MODS_ONESHOT(mod);
             break;
+        case QK_ONE_SHOT_STATUS:
+            action.code = ACTION_MODS_ONESHOT_TOGGLE();
+            break;
         case QK_LAYER_TAP_TOGGLE ... QK_LAYER_TAP_TOGGLE_MAX:
             action.code = ACTION_LAYER_TAP_TOGGLE(keycode & 0xFF);
             break;
