@@ -107,12 +107,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _____________CARPLAX_QFMLWY_L2_____________, _____________CARPLAX_QFMLWY_R2_____________,
         _____________CARPLAX_QFMLWY_L3_____________, _____________CARPLAX_QFMLWY_R3_____________
     ),
-    [_MODS] = LAYOUT_wrapper(
-        _______, ___________________BLANK___________________,                                       ___________________BLANK___________________, _______,
-        _______, ___________________BLANK___________________,                                       ___________________BLANK___________________, _______,
-        KC_LSFT, ___________________BLANK___________________, _______, _______,   _______, _______, ___________________BLANK___________________, KC_RSFT,
-                                   _______, _______, KC_LALT, _______, _______,   _______, _______, KC_RGUI, _______, _______
-    ),
     [_LOWER] = LAYOUT_wrapper(
         KC_F12,  _________________LOWER_L1__________________,                                       _________________LOWER_R1__________________, KC_F11,
         _______, _________________LOWER_L2__________________,                                       _________________LOWER_R2__________________, KC_PIPE,
@@ -209,7 +203,7 @@ void render_layer_state(void) {
     oled_write_P(PSTR(" "), false);
     oled_write_P(PSTR("Raise"), layer_state_is(_RAISE));
     oled_write_P(PSTR(" "), false);
-    oled_write_ln_P(PSTR("Mods"), layer_state_is(_MODS));
+    oled_write_ln_P(PSTR("Adjust"), layer_state_is(_ADJUST));
 }
 
 void render_keylock_status(uint8_t led_usb_state) {
