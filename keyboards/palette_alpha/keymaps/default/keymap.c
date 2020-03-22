@@ -15,12 +15,11 @@ extern rgblight_config_t rgblight_config;
 // The underscores don't mean anything - you can have a layer called STUFF or any other name.
 // Layer names don't all need to be of the same length, obviously, and you can also skip them
 // entirely and just use numbers.
-#define _QWERTY 0
-#define _CLANDOR 1
-#define _LOWER 2
-#define _RAISE 3
-#define _ADJUST 4
-#define _FN 5
+#define _CLANDOR 0
+#define _LOWER 1
+#define _RAISE 2
+#define _ADJUST 3
+#define _FN 4
 
 #define KC_RESET  RESET
 #define KC_LOWER  LOWER
@@ -50,6 +49,7 @@ extern rgblight_config_t rgblight_config;
 #define KC_TG     TG
 #define KC_GUI    LGUI
 #define KC_SFT    LSFT
+#define KC_PHOTO_MODE   PHOTO_MODE
 
 #define BRMD      KC_BRMD
 #define BRMU      KC_BRMU
@@ -64,12 +64,9 @@ enum custom_keycodes {
   RAISE,
   ADJUST,
   FN,
+  PHOTO_MODE,
   BACKLIT,
   RGBRST
-};
-
-enum macro_keycodes {
-  KC_SAMPLEMACRO,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -97,6 +94,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
          //`------+------+------+------+------+------'  `------+------+------+------+------+------'
   ),
 
+
+  [_LOWER] = LAYOUT_kc( \
+  //,-----------------------------------------.                ,-----------------------------------------.
+                 1,     2,     3,     4,     5,                      6,     7,     8,     9,     0,\
+  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
+       LCTL, MINUS,  PMNS,   EQL,  PPLS,  LBRC,                   RBRC,  SLSH,  SCLN,  QUOT,  BSLS,   ENT,\
+  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
+       LSFT,  UNDS,  CIRC,  ASTR,  LPRN,  LCBR,                   RCBR,  RPRN,  COLN,   DQT,  PIPE,    FN,\
+  //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
+               TAB,   ESC, RAISE,  LGUI,   SPC,  HOME,      END, LOWER, RAISE,  LALT, PHOTO_MODE, BSPC  \
+         //`------+------+------+------+------+------'  `------+------+------+------+------+------'
+  ),
+
   [_RAISE] = LAYOUT_kc( \
   //,-----------------------------------------.                ,-----------------------------------------.
               EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR, GRAVE,  TILD,\
@@ -105,7 +115,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LSFT,    F9,   F10,   F11,   F12,  CIRC,                   UNDS,  PLUS, MINUS,    NO,    NO,    FN,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-               TAB,   ESC, RAISE,  LGUI,   SPC,  HOME,      END, LOWER, RAISE,  LALT, SFT(KC_TAB), BSPC  \
+               TAB,   ESC, RAISE,  LGUI,   SPC,  HOME,      END, LOWER, RAISE,  LALT, PHOTO_MODE, BSPC  \
          //`------+------+------+------+------+------'  `------+------+------+------+------+------'
   ),
 
@@ -117,7 +127,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LMOD,  LHUD,  LSAD,  LVAD,  LSPD,  LM_K,                     NO,    F9,   F10,   F11,   F12,    FN,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-               TAB,   ESC, RAISE,  LGUI,   SPC,  HOME,      END, LOWER, RAISE,  LALT, SFT(KC_TAB), BSPC  \
+               TAB,   ESC, RAISE,  LGUI,   SPC,  HOME,      END, LOWER, RAISE,  LALT,   ESC,  BSPC  \
          //`------+------+------+------+------+------'  `------+------+------+------+------+------'
   ),
 
@@ -129,13 +139,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LSFT,  WH_L,  ACL0,  ACL1,  ACL2,  WH_R,                VOLDOWN, VOLUP,  MUTE, EJECT,  RSFT,    FN,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-               TAB,   ESC, RAISE,  LGUI,   SPC,  HOME,      END, LOWER, RAISE,  LALT, SFT(KC_TAB), BSPC  \
+               TAB,   ESC, RAISE,  LGUI,   SPC,  HOME,      END, LOWER, RAISE,  LALT,   ESC,  BSPC  \
          //`------+------+------+------+------+------'  `------+------+------+------+------+------'
 
   )
 };
 
 int RGB_current_mode;
+bool photo_mode = false;
 
 void persistent_default_layer_set(uint16_t default_layer) {
   eeconfig_update_default_layer(default_layer);
@@ -209,9 +220,6 @@ void render_status(void) {
     oled_write_P(PSTR("Layer: "), false);
 
     switch (get_highest_layer(layer_state)) {
-        case _CLANDOR:
-            oled_write_P(PSTR("Clandor\n"), false);
-            break;
         case _QWERTY:
             oled_write_P(PSTR("Qwerty\n"), false);
             break;
@@ -237,6 +245,12 @@ void render_status(void) {
     snprintf(enable, sizeof(enable), "%s", rgb_matrix_config.enable ? "on" : "- ");
     snprintf(rbf_info_str, sizeof(rbf_info_str), "%s %s", enable, rgb_mat_names[rgb_matrix_config.mode]);
     oled_write_ln(rbf_info_str, false);
+    if (photo_mode) {
+      oled_write_ln_P(PSTR("Photo mode"), false);
+    }
+    else {
+      oled_write_ln_P(PSTR("Scroll mode"), false);
+    }
 }
 
 static void render_logo(void) {
@@ -275,7 +289,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case BASE:
       if (record->event.pressed) {
-        persistent_default_layer_set(1UL<<_QWERTY);
+        persistent_default_layer_set(1UL<<_CLANDOR);
       }
       return false;
     case LOWER:
@@ -297,20 +311,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
     case ADJUST:
-        if (record->event.pressed) {
-          layer_on(_ADJUST);
-        } else {
-          layer_off(_ADJUST);
-        }
-        return false;
+      if (record->event.pressed) {
+        layer_on(_ADJUST);
+      } else {
+        layer_off(_ADJUST);
+      }
+      return false;
     case FN:
-        if (record->event.pressed) {
-          layer_on(_FN);
-        } else {
-          layer_off(_FN);
-        }
-        return false;
-
+      if (record->event.pressed) {
+        layer_on(_FN);
+      } else {
+        layer_off(_FN);
+      }
+      return false;
+    case PHOTO_MODE:
+      if (record->event.pressed) {
+        photo_mode = !photo_mode;
+      }
+      return false;
     case RGB_MOD:
       #ifdef RGBLIGHT_ENABLE
         if (record->event.pressed) {
@@ -349,6 +367,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 void encoder_update_user(uint8_t index, bool clockwise) {
+  if (photo_mode){
+    if (index == 0) {
+      if (clockwise) {
+        tap_code(KC_DOT);
+      } else {
+        tap_code(KC_COMM);
+      }
+    }
+    else if (index == 1) {
+      if (clockwise) {
+        tap_code(KC_MINUS);
+      } else {
+        tap_code(KC_EQL);
+      }
+    }
+  }
+  else {
     if (index == 0) {
       if (clockwise) {
         tap_code(KC_WH_R);
@@ -357,10 +392,11 @@ void encoder_update_user(uint8_t index, bool clockwise) {
       }
     }
     else if (index == 1) {
-        if (clockwise) {
-            tap_code(KC_WH_D);
-        } else {
-            tap_code(KC_WH_U);
-        }
+      if (clockwise) {
+        tap_code(KC_WH_D);
+      } else {
+        tap_code(KC_WH_U);
+      }
     }
+  }
 }
