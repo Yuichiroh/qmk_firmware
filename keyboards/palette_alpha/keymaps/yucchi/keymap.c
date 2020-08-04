@@ -79,7 +79,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LSFT,     Z,     X,     C,     M,     V,                      L,     K,  COMM,   DOT,  SLSH,    FN,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-               TAB,     Q, RAISE,  LGUI,   SPC,  HOME,      END, LOWER, RAISE,  LALT, TG(_QWERTY), SFT(KC_TAB)  \
+               TAB,     Q, RAISE,  LGUI,   SPC,  HOME,      END, LOWER, RAISE,  LALT, GUI(KC_SPC), SFT(KC_TAB)  \
          //`------+------+------+------+------+------'  `------+------+------+------+------+------'
   ),
 
@@ -91,7 +91,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
        LSFT,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH,    FN,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-               TAB,   ESC, RAISE,  LGUI,   SPC,  HOME,      END, LOWER, RAISE,  LALT, TG(_QWERTY), BSPC  \
+               TAB,   ESC, RAISE,  LGUI,   SPC,  HOME,      END, LOWER, RAISE,  LALT, GUI(KC_SPC),  BSPC  \
          //`------+------+------+------+------+------'  `------+------+------+------+------+------'
   ),
 
@@ -127,7 +127,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LMOD,  LHUD,  LSAD,  LVAD,  LSPD,  LM_K,                     NO,    F9,   F10,   F11,   F12,    FN,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-               TAB,   ESC, RAISE,  LGUI,   SPC,  HOME,      END, LOWER, RAISE,  LALT,   ESC,  BSPC  \
+               TAB,   ESC, RAISE,  LGUI,   SPC,  HOME,      END, LOWER, RAISE,  LALT, TG(_QWERTY), BSPC  \
          //`------+------+------+------+------+------'  `------+------+------+------+------+------'
   ),
 
